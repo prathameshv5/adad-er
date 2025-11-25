@@ -63,6 +63,15 @@ Community Features
 └── Notification (system-wide messaging)
 ```
 
+#### 4. Donor Pledge System
+```
+ProductPledge
+├── Donor pledge with quantity & amount
+├── Admin status management
+├── Fulfillment tracking
+└── Pledge notes & updates
+```
+
 ## 🔄 Critical Business Workflows
 
 ### User Registration Flow
@@ -85,6 +94,12 @@ Community Features
 - **Workflow**: AI scan → Flag suspicious content → Admin review → Final decision
 - **Integration**: Links to ProductReview for comprehensive moderation
 
+### Donor Pledge Workflow
+1. **Donor**: Browse products → Create pledge with quantity/amount → Submit pledge
+2. **Admin**: Review pledge → Update status (pending/approved/fulfilled/cancelled)
+3. **Status Tracking**: Pledge visibility to admin with fulfillment notes
+4. **Notifications**: Status updates sent to donor
+
 ## 📊 Key Data Relationships
 
 ### Primary Relationships
@@ -98,6 +113,7 @@ Community Features
 - **VendorDetails.approved_by_admin_id → AdminDetails**
 - **Product.approved_by_admin_id → AdminDetails**
 - **ProductReview.moderated_by_admin_id → AdminDetails**
+- **ProductPledge.updated_by_admin_id → AdminDetails**
 
 ### Content Categorization
 - **Disability → DisabilitySubCategory**: One-to-many hierarchy
@@ -117,6 +133,9 @@ Community Features
 
 ### Help Content
 `active/inactive`
+
+### Pledge Status
+`pending → approved/cancelled → fulfilled`
 
 ## 🔧 Technical Specifications
 
@@ -166,6 +185,12 @@ Community Features
 1. **Proxy Operations**: Assist PwD with platform navigation
 2. **Product Research**: Help with selection and evaluation
 3. **Communication**: Interface with vendors and support
+
+### Donor Operations
+1. **Product Discovery**: Browse products needing support
+2. **Pledge Creation**: Commit to funding specific products with quantity
+3. **Status Tracking**: Monitor pledge fulfillment progress
+4. **Impact Measurement**: View donation effectiveness
 
 ## 🔗 Integration Points
 
