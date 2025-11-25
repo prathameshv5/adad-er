@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database ER Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls button {
+            margin: 0 5px;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #0056b3;
+        }
+        .diagram-container {
+            width: 100%;
+            height: 80vh;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            position: relative;
+            cursor: grab;
+        }
+        .diagram-container:active {
+            cursor: grabbing;
+        }
+        #diagram {
+            transform-origin: 0 0;
+            transition: transform 0.1s ease;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .legend-item {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Entity-Relationship Diagram</h1>
+        
+        <div class="controls">
+            <button onclick="zoomIn()">Zoom In (+)</button>
+            <button onclick="zoomOut()">Zoom Out (-)</button>
+            <button onclick="resetZoom()">Reset View</button>
+            <button onclick="fitToScreen()">Fit to Screen</button>
+        </div>
+        
+        <div class="diagram-container" id="container">
+            <div id="diagram">
+                <pre class="mermaid">
+erDiagram
+
+    %% =========================
+    %% USER & ROLE STRUCTURE
+    %% =========================
+
+    User {
+        int user_id PK
+        int role_id FK
+        string name
+        string email
+        string phone
+        string password_hash
+        string gender
+        date date_of_birth
+        string address
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+    Role {
+        int role_id PK
+        string role_name
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+
+    VendorDetails {
+        int vendor_id PK, FK
+        string company_name
+        string company_type
+        string gst_number
+        string pan
+        string address
+        string website
+        string business_license_document
+        string profile_status
+        string rejection_reason
+        int approved_by_admin_id FK
+        datetime approved_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    PwDDetails {
+        int pwd_id PK, FK
+        int disability_percentage
+        string udid_number
+        string udid_document
+        string support_needed
+        string guardian_name
+        string address
+        datetime created_at
+        datetime updated_at
+    }
+
+    CaregiverDetails {
+        int caregiver_id PK, FK
+        int pwd_id FK
+        string relationship_type
+        datetime created_at
+        datetime updated_at
+    }
+
+    EmployerDetails {
+        int employer_id PK, FK
+        string organization_name
+        string organization_type
+        string contact_person
+        string designation
+        string website
+        string address
+        string registration_document
+        string profile_status
+        datetime created_at
+        datetime updated_at
+    }
+
+    DonorDetails {
+        int donor_id PK, FK
+        string full_name_or_organization_name
+        string donor_type
+        string address
+        string id_proof_document
+        string donation_preference
+        datetime created_at
+        datetime updated_at
+    }
+
+    AdminDetails {
+        int admin_id PK, FK
+        string designation
+        string department
+        string access_level
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% =========================
+    %% DISABILITY & PRODUCT STRUCTURE
+    %% =========================
+
+    Disability {
+        int disability_id PK
+        string name
+        string description
+    }
+
+    DisabilitySubCategory {
+        int subcategory_id PK
+        int disability_id FK
+        string name
+        string description
+    }
+
+    Product {
+        int product_id PK
+        int vendor_id FK
+        int parent_product_id FK
+        string name
+        string description
+        float price
+        string specifications
+        string demo_video_url
+        string stock_status
+        string status
+        string rejection_reason
+        int approved_by_admin_id FK
+        datetime approved_at
+        boolean is_current_version
+        int version_number
+        datetime created_at
+        datetime updated_at
+    }
+
+    PwDDisability {
+        int pwd_disability_id PK
+        int pwd_id FK
+        int disability_id FK
+        datetime created_at
+    }
+
+    ProductDisabilitySubCategory {
+        int product_subcategory_id PK
+        int product_id FK
+        int subcategory_id FK
+        datetime created_at
+    }
+
+    ProductMedia {
+        int media_id PK
+        int product_id FK
+        string media_type
+        string url
+        datetime created_at
+    }
+
+    %% =========================
+    %% INTERACTIONS
+    %% =========================
+
+    ProductInterest {
+        int interest_id PK
+        int product_id FK
+        int pwd_id FK
+        string note
+        datetime created_at
+    }
+
+    ProductReview {
+        int review_id PK
+        int product_id FK
+        int pwd_id FK
+        int rating
+        string review_text
+        string status
+        string ai_moderation_result
+        string ai_flag_reason
+        string rejection_reason
+        int moderated_by_admin_id FK
+        datetime ai_moderated_at
+        datetime admin_moderated_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    ReviewReply {
+        int reply_id PK
+        int review_id FK
+        int user_id FK
+        string reply_text
+        string status
+        string rejection_reason
+        int moderated_by_admin_id FK
+        datetime admin_moderated_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% =========================
+    %% NOTIFICATIONS
+    %% =========================
+
+    Notification {
+        int notification_id PK
+        int user_id FK
+        string title
+        string message
+        string related_entity_type
+        int related_entity_id
+        boolean is_read
+        datetime created_at
+    }
+
+    %% =========================
+    %% HELP SECTION
+    %% =========================
+
+    HelpCategory {
+        int help_category_id PK
+        string name
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+
+    HelpArticle {
+        int article_id PK
+        int help_category_id FK
+        int created_by_admin_id FK
+        int role_id FK
+        string title
+        string content
+        string attachments
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+
+
+    FAQ {
+        int faq_id PK
+        int help_category_id FK
+        int created_by_admin_id FK
+        int role_id FK
+        string question
+        string answer
+        int display_order
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% =========================
+    %% MODERATION SYSTEM
+    %% =========================
+
+    AIModeration {
+        int ai_moderation_id PK
+        int review_id FK
+        string moderation_result
+        string flag_reason
+        float confidence_score
+        datetime moderated_at
+    }
+
+    %% =========================
+    %% STORY SECTION
+    %% =========================
+
+    Story {
+        int story_id PK
+        int admin_id FK
+        string title
+        string content
+        string image_url
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+    StoryLike {
+        int like_id PK
+        int story_id FK
+        int pwd_id FK
+        datetime created_at
+    }
+
+    %% =========================
+    %% RELATIONSHIPS
+    %% =========================
+
+    Role ||--o{ User : "has users"
+    User }o--|| Role : "role_id"
+    
+    User ||--|| VendorDetails : "has"
+    User ||--|| PwDDetails : "has"
+    User ||--|| DonorDetails : "has"
+    User ||--|| EmployerDetails : "has"
+    User ||--|| AdminDetails : "has"
+    User ||--|| CaregiverDetails : "has"
+
+    PwDDetails ||--|| CaregiverDetails : "1-to-1"
+
+    Disability ||--o{ DisabilitySubCategory : "has many"
+
+    VendorDetails ||--o{ Product : "lists"
+    
+    PwDDetails ||--o{ PwDDisability : "has disabilities"
+    Disability ||--o{ PwDDisability : "affects PwD"
+    
+    Product ||--o{ ProductDisabilitySubCategory : "belongs to subcategories"
+    DisabilitySubCategory ||--o{ ProductDisabilitySubCategory : "contains products"
+
+    Product ||--o{ ProductMedia : "media"
+    Product ||--o{ ProductInterest : "interested by PwD"
+    Product ||--o{ ProductReview : "reviewed"
+    ProductReview ||--o{ ReviewReply : "replies"
+
+    PwDDetails ||--o{ ProductInterest : "PwD shows interest"
+    PwDDetails ||--o{ ProductReview : "PwD writes review"
+    VendorDetails ||--o{ ReviewReply : "vendor replies"
+    AdminDetails ||--o{ ReviewReply : "admin replies"
+    AdminDetails ||--o{ ProductReview : "admin moderates"
+    AdminDetails ||--o{ ReviewReply : "admin moderates replies"
+    AdminDetails ||--o{ VendorDetails : "admin approves vendors"
+    AdminDetails ||--o{ Product : "admin approves products"
+    Product ||--o{ Product : "product versioning"
+    
+    VendorDetails }o--|| AdminDetails : "approved_by_admin_id"
+    Product }o--|| AdminDetails : "approved_by_admin_id"
+    ProductReview }o--|| AdminDetails : "moderated_by_admin_id"
+    ReviewReply }o--|| AdminDetails : "moderated_by_admin_id"
+    
+    CaregiverDetails }o--|| PwDDetails : "pwd_id"
+    Product }o--|| Product : "parent_product_id"
+    User ||--o{ Notification : "user_id"
+
+    User ||--o{ ReviewReply : "user_id"
+    
+    VendorDetails ||--o{ Notification : "receives"
+    PwDDetails ||--o{ Notification : "receives"
+    DonorDetails ||--o{ Notification : "receives"
+    EmployerDetails ||--o{ Notification : "receives"
+    AdminDetails ||--o{ Notification : "receives"
+
+    HelpCategory ||--o{ HelpArticle : "has articles"
+    HelpCategory ||--o{ FAQ : "has faqs"
+    AdminDetails ||--o{ HelpArticle : "admin creates articles"
+    AdminDetails ||--o{ FAQ : "admin creates faqs"
+
+    HelpArticle }o--|| Role : "role_id"
+    FAQ }o--|| Role : "role_id"
+    HelpArticle }o--|| AdminDetails : "created_by_admin_id"
+    FAQ }o--|| AdminDetails : "created_by_admin_id"
+
+    ProductReview ||--|| AIModeration : "ai moderates"
+    AIModeration }o--|| ProductReview : "review_id"
+    
+    AdminDetails ||--o{ Story : "admin creates"
+    Story ||--o{ StoryLike : "liked by PwD"
+    PwDDetails ||--o{ StoryLike : "PwD likes"
+
+                </pre>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>Database Schema Overview</h3>
+            <div class="legend-item"><strong>User Management:</strong> Multi-role system supporting vendors, PwD (Persons with Disabilities), caregivers, donors, employers, and admins</div>
+            <div class="legend-item"><strong>Disability & Products:</strong> Disability-based categorization with many-to-many relationships between PwD-disabilities and products-subcategories</div>
+            <div class="legend-item"><strong>Interactions:</strong> Product interests, reviews, and replies system</div>
+            <div class="legend-item"><strong>Notifications:</strong> System-wide notification management</div>
+            <div class="legend-item"><strong>Help System:</strong> Categorized help articles and FAQs by role</div>
+            <div class="legend-item"><strong>Story System:</strong> Admin-created stories that PwD users can like</div>
+            <div class="legend-item"><strong>Key Features:</strong> Role-based access, document management, review system, and comprehensive user profiles</div>
+        </div>
+    </div>
+
+    <script>
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let isDragging = false;
+        let startX, startY;
+
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            },
+            er: {
+                useMaxWidth: false
+            }
+        });
+
+        function updateTransform() {
+            const diagram = document.getElementById('diagram');
+            diagram.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function zoomIn() {
+            scale = Math.min(scale * 1.2, 3);
+            updateTransform();
+        }
+
+        function zoomOut() {
+            scale = Math.max(scale / 1.2, 0.3);
+            updateTransform();
+        }
+
+        function resetZoom() {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            updateTransform();
+        }
+
+        function fitToScreen() {
+            const container = document.getElementById('container');
+            const diagram = document.getElementById('diagram');
+            const containerRect = container.getBoundingClientRect();
+            const diagramRect = diagram.getBoundingClientRect();
+            
+            const scaleX = containerRect.width / diagramRect.width;
+            const scaleY = containerRect.height / diagramRect.height;
+            scale = Math.min(scaleX, scaleY, 1) * 0.9;
+            
+            translateX = (containerRect.width - diagramRect.width * scale) / 2;
+            translateY = (containerRect.height - diagramRect.height * scale) / 2;
+            updateTransform();
+        }
+
+        // Mouse wheel zoom
+        document.getElementById('container').addEventListener('wheel', function(e) {
+            e.preventDefault();
+            const rect = this.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const oldScale = scale;
+            if (e.deltaY < 0) {
+                scale = Math.min(scale * 1.1, 3);
+            } else {
+                scale = Math.max(scale / 1.1, 0.3);
+            }
+            
+            const scaleChange = scale / oldScale;
+            translateX = mouseX - (mouseX - translateX) * scaleChange;
+            translateY = mouseY - (mouseY - translateY) * scaleChange;
+            
+            updateTransform();
+        });
+
+        // Pan functionality
+        document.getElementById('container').addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        // Touch support for mobile
+        let lastTouchDistance = 0;
+        document.getElementById('container').addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                lastTouchDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            } else if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            if (e.touches.length === 2) {
+                const distance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                if (lastTouchDistance > 0) {
+                    const scaleChange = distance / lastTouchDistance;
+                    scale = Math.max(0.3, Math.min(3, scale * scaleChange));
+                    updateTransform();
+                }
+                lastTouchDistance = distance;
+            } else if (e.touches.length === 1 && isDragging) {
+                translateX = e.touches[0].clientX - startX;
+                translateY = e.touches[0].clientY - startY;
+                updateTransform();
+            }
+        });
+
+        document.addEventListener('touchend', function() {
+            isDragging = false;
+            lastTouchDistance = 0;
+        });
+    </script>
+</body>
+</html>
